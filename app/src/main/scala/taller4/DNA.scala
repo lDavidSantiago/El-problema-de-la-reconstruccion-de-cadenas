@@ -23,16 +23,26 @@ class   DNA{
     (1 to tam).map(_ => alfabeto(r.nextInt(4)))
   }
 
-
+  def generarCombinaciones(n: Int): Seq[Seq[Char]] = {
+    if (n <= 0) {
+      Seq(Seq[Char]())
+    } else {
+      for {
+        letra <- alfabeto
+        combinacion <- generarCombinaciones(n - 1)
+      } yield letra +: combinacion
+    }
+  }
   def verificarSecuencia(subCadena: Seq[Char], cadena: Seq[Char]): Boolean = {
     val oraculo: Oraculo = (s: Seq[Char]) => s.containsSlice(subCadena)
     oraculo(cadena)
   }
 
-  def reconstruirCadenaIngenuo(n: Int, o: Oraculo): Seq[Char] = {
-    (1 to n).foldLeft(Seq(Seq[Char]())) { (acc, _) =>
-      acc.flatMap(seq => alfabeto.map(char => seq :+ char))
-    }.filter(o).head
+  def reconstruirCadenaIngenuo(n: Int,o:Oraculo): Unit= {
+    val s = generarCombinaciones(n).filter(o).head
+    println(s)
   }
 }
+
+
 
