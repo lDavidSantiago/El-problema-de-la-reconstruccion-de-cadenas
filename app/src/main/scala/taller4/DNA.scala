@@ -29,10 +29,10 @@ class   DNA{
     oraculo(cadena)
   }
 
-  def reconstruirCadenaIngenuo(n: Int, o: Oraculo): Unit  = {
-    print((1 to n).foldLeft(Seq(Seq[Char]())) { (acc,_)
-    =>acc.flatMap(seq => alfabeto.map(char => seq :+ char))
-    }.toSeq)
+  def reconstruirCadenaIngenuo(n: Int, o: Oraculo): Seq[Char] = {
+    (1 to n).foldLeft(Seq(Seq[Char]())) { (acc, _) =>
+      acc.flatMap(seq => alfabeto.map(char => seq :+ char))
+    }.filter(o).head
   }
 }
 
