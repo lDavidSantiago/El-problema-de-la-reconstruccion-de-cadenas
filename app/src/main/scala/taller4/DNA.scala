@@ -1,6 +1,8 @@
 
 package taller4
 
+import scala.annotation.tailrec
+
 /**
  * DNA class represents a DNA sequence generator.
  * It contains methods to generate random DNA sequences.
@@ -42,7 +44,28 @@ class   DNA{
     val s = generarCombinaciones(n).filter(o).head
     println(s)
   }
+
+  def reconstruirCadenaTurbo(n: Int, o: Oraculo): Seq [Char] = {
+    @tailrec
+    def generarCadenaTurbo(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
+      val newSC = SC.flatMap(seq => alfabeto.flatMap(c => Some(seq :+ c).filter(o)))
+      val resultado = newSC.find(w => w.length == n)
+
+      if (resultado.nonEmpty) {
+        resultado.head
+      } else if (k > n) {
+        Seq.empty[Char]
+      } else {
+        generarCadenaTurbo(k * 2, newSC)
+      }
+    }
+
+    val conjuntoInicial: Seq[Seq[Char]] = alfabeto.map(Seq(_))
+    generarCadenaTurbo(1, conjuntoInicial)
+  }
+
 }
+
 
 
 

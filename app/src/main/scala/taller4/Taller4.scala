@@ -8,6 +8,8 @@ package taller4
 import org.scalameter.measure
 import org.scalameter.withWarmer
 import org.scalameter.Warmer
+import scala.annotation.tailrec
+
 
 
 object Taller4 {
@@ -18,8 +20,15 @@ object Taller4 {
     val dna = new DNA()
     val cadena = dna.randomDna(5)
     val or = Oraculo.crearOraculo(cadena)
+
+    println("Cadena aleatoria:")
     println(cadena)
+
+    println("Resultado de reconstruirCadenaIngenuo:")
     println(dna.reconstruirCadenaIngenuo(cadena.length,or))
+
+    println("Resultado de reconstruirCadenaTurbo:")
+    println(dna.reconstruirCadenaTurbo(cadena.length, or))
 
   }
 }
