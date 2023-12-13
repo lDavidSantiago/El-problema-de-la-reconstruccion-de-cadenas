@@ -22,22 +22,6 @@ class   DNA{
     val r = scala.util.Random
     (1 to tam).map(_ => alfabeto(r.nextInt(4)))
   }
-  def generarCombinacionesHastaN(n: Int): Seq[Seq[Char]] = {
-    val alfabeto = Seq('A', 'C', 'G', 'T')
-    (1 to n).flatMap(i => generarCombinaciones(i))
-  }
-
-  def generarCombinaciones(n: Int): Seq[Seq[Char]] = {
-    val alfabeto = Seq('A', 'C', 'G', 'T')
-
-    if (n == 1) {
-      alfabeto.map(Seq(_))
-    } else {
-      val combinacionesPrevias = generarCombinaciones(n - 1)
-      combinacionesPrevias.flatMap(combinacion => alfabeto.map(char => combinacion :+ char))
-    }
-  }
-
 
 
   def verificarSecuencia(subCadena: Seq[Char], cadena: Seq[Char]): Boolean = {
@@ -45,11 +29,10 @@ class   DNA{
     oraculo(cadena)
   }
 
-  def reconstruirCadenaIngenuo(n: Int, o: Oraculo): Seq[Char] = {
-
-    (1 to n).foldLeft(Seq(Seq.empty[Char])) { (acc, _) =>
-      acc.flatMap(seq => alfabeto.map(char => seq :+ char))
-    }.to(LazyList).filter(o).head
+  def reconstruirCadenaIngenuo(n: Int, o: Oraculo): Unit  = {
+    print((1 to n).foldLeft(Seq(Seq[Char]())) { (acc,_)
+    =>acc.flatMap(seq => alfabeto.map(char => seq :+ char))
+    }.toSeq)
   }
 }
 

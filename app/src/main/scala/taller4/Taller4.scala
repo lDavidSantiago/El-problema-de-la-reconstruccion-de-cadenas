@@ -16,6 +16,10 @@ object Taller4 {
 
   def main(args: Array[String]): Unit = {
     val dna = new DNA()
-    println(dna.generarCombinacionesHastaN(2))
+    val cadena = dna.randomDna(2)
+    val or = Oraculo.crearOraculo(cadena)
+    println(cadena)
+    println(dna.reconstruirCadenaIngenuo(cadena.length,or))
+
   }
 }
