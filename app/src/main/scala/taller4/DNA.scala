@@ -7,7 +7,7 @@ import scala.annotation.tailrec
  * DNA class represents a DNA sequence generator.
  * It contains methods to generate random DNA sequences.
  */
-class   DNA{
+class   DNA {
   //The DNA alphabet consisting of the four nucleotides
   val alfabeto = Seq('A', 'C', 'G', 'T')
 
@@ -35,35 +35,37 @@ class   DNA{
       } yield letra +: combinacion
     }
   }
+
   def verificarSecuencia(subCadena: Seq[Char], cadena: Seq[Char]): Boolean = {
     val oraculo: Oraculo = (s: Seq[Char]) => s.containsSlice(subCadena)
     oraculo(cadena)
   }
 
-  def reconstruirCadenaIngenuo(n: Int,o:Oraculo): Unit= {
+  def reconstruirCadenaIngenuo(n: Int, o: Oraculo): Unit = {
     val s = generarCombinaciones(n).filter(o).head
     println(s)
   }
 
-  def reconstruirCadenaTurbo(n: Int, o: Oraculo): Seq [Char] = {
-    @tailrec
-    def generarCadenaTurbo(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
-      val newSC = SC.flatMap(seq => alfabeto.flatMap(c => Some(seq :+ c).filter(o)))
-      val resultado = newSC.find(w => w.length == n)
+  def reconstruirCadenaTurbo(n: Int, o: Oraculo): Seq[Char] = {
+    if (n == 1) {
+      alfabeto.map(Seq(_)).find(o).getOrElse(Seq.empty)
+    } else {
+      @tailrec
+      def generarCadenaTurbo(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
+        val newSC = SC.flatMap(seq => alfabeto.flatMap(c => Some(seq :+ c).filter(o)))
+        val resultado = newSC.find(w => w.length == n)
 
-      if (resultado.nonEmpty) {
-        resultado.head
-      } else if (k > n) {
-        Seq.empty[Char]
-      } else {
-        generarCadenaTurbo(k * 2, newSC)
+        if ((resultado.nonEmpty)) {
+          resultado.head
+        } else {
+          generarCadenaTurbo(k + 1, newSC)
+        }
       }
+
+      val conjuntoInicial: Seq[Seq[Char]] = alfabeto.map(Seq(_))
+      generarCadenaTurbo(1, conjuntoInicial)
     }
-
-    val conjuntoInicial: Seq[Seq[Char]] = alfabeto.map(Seq(_))
-    generarCadenaTurbo(1, conjuntoInicial)
   }
-
 }
 
 
