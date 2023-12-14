@@ -18,7 +18,7 @@ object Taller4 {
 
   def main(args: Array[String]): Unit = {
     val dna = new DNA()
-    val cadena = dna.randomDna(6)
+    val cadena = dna.randomDna(4)
     val or = Oraculo.crearOraculo(cadena)
 
     println("Cadena aleatoria:")
@@ -30,6 +30,9 @@ object Taller4 {
     println("Resultado de reconstruirCadenaTurbo:")
     println(dna.reconstruirCadenaTurbo(cadena.length, or))
 
+
+    println("Imprimase manito: ")
+    println(dna.reconstruirCadenaMejorado(cadena.length, or))
   }
 }
 

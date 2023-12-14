@@ -47,6 +47,21 @@ class   DNA {
     val s = generarCombinaciones(n).to(LazyList).filter(o).head
     s
   }
+  def reconstruirCadenaMejorado(n: Int, o: Oraculo): Seq[Char] = {
+    @tailrec
+    def GenerarCadenaMejorada(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
+      if (k > n) Seq.empty[Char]
+      else {
+        val newSC = SC.flatMap(seq => alfabeto.map(c => seq :+ c)).filter(o)
+        newSC.find(_.length == n) match {
+          case Some(resultado) => resultado
+          case None => GenerarCadenaMejorada(k + 1, newSC)
+        }
+      }
+    }
+
+    GenerarCadenaMejorada(1, Seq(Seq.empty[Char]))
+  }
 
   def reconstruirCadenaTurbo(n: Int, o: Oraculo): Seq[Char] = {
     if (n == 1) {
@@ -68,6 +83,7 @@ class   DNA {
       generarCadenaTurbo(1, conjuntoInicial)
     }
   }
+
 
 }
 
