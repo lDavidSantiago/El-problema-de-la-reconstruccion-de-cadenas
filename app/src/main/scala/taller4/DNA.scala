@@ -115,6 +115,33 @@ class DNA {
     GenerarCadenaMejorada(1, Seq(Seq.empty[Char]))
   }
 
+  def reconstruirCadenaMejoradoPar(n: Int, o: Oraculo): Seq[Char] ={
+    @tailrec
+    def GenerarCadenaMejorada(k: Int, SC: Seq[Seq[Char]]): Seq[Char] ={
+      if (k > n) Seq.empty[Char]
+      else {
+        val (alfabeto1, alfabeto2) = alfabeto.splitAt(alfabeto.length / 2)
+        val newSecuenceCaracter1 = task{
+          SC.flatMap(seq => alfabeto1.map(c => seq :+ c)).filter(o)
+        }
+        val newSecuenceCaracter2 = task {
+          SC.flatMap(seq => alfabeto2.map(c => seq :+ c)).filter(o)
+        }
+        val newSecuenceCaracter = parallel(newSecuenceCaracter1, newSecuenceCaracter2)
+
+        newSecuenceCaracter._1.join().find(_.length == n) match {
+          case Some(resultado) => resultado
+          case None => newSecuenceCaracter._2.join().find(_.length == n) match {
+            case Some(resultado) => resultado
+            case None => GenerarCadenaMejorada(k + 1, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
+          }
+        }
+      }
+    }
+
+    GenerarCadenaMejorada(1, Seq(Seq.empty[Char]))
+  }
+
   /**
    * Generates all possible combinations of the DNA alphabet of a given length and
    * returns the first one that satisfies a given condition. This method is further optimized
