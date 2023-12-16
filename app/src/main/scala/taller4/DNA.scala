@@ -28,7 +28,7 @@ class DNA {
    * Verifies if a subsequence is present in a given sequence.
    *
    * @param subCadena The subsequence to look for.
-   * @param cadena The sequence in which to look for the subsequence.
+   * @param cadena    The sequence in which to look for the subsequence.
    * @return A boolean indicating whether the subsequence is present in the sequence.
    */
   def verificarSecuencia(subCadena: Seq[Char], cadena: Seq[Char]): Boolean = {
@@ -55,11 +55,12 @@ class DNA {
         } yield letra +: combinacion
       }
     }
+
     val s = generarCombinaciones(n).to(LazyList).filter(o).head
     s
   }
 
-  def reconstruirCadenaIngenuoPar(umbral:Int)(n: Int, o: Oraculo): Seq[Char] = {
+  def reconstruirCadenaIngenuoPar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
     def test(n: Int): List[Seq[Char]] = {
       if (n <= 0) {
         List(Seq[Char]())
@@ -83,13 +84,10 @@ class DNA {
         (combinaciones._1.join() ++ combinaciones._2.join()).toList
       }
     }
+
     val s = test(n).to(LazyList).filter(o).head
     s
   }
-
-
-
-
 
 
   /**
@@ -141,6 +139,34 @@ class DNA {
           generarCadenaTurbo(k + 1, newSC)
         }
       }
+
+      val conjuntoInicial: Seq[Seq[Char]] = alfabeto.map(Seq(_))
+      generarCadenaTurbo(1, conjuntoInicial)
+    }
+  }
+
+
+  def reconstruirCadenaTurboMejorada(n: Int, o: Oraculo): Seq[Char] = {
+    if (n == 1) {
+      alfabeto.map(Seq(_)).find(o).getOrElse(Seq.empty)
+    }
+    else {
+      @tailrec
+      def generarCadenaTurbo(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
+        val newSC = SC.flatMap(seq => alfabeto.flatMap(c => Some(seq :+ c).filter(o)))
+        val resultado = newSC.find(w => w.length == n)
+        if (resultado.nonEmpty) {
+          resultado.head
+        } else {
+          generarCadenaTurbo(k * 2, newSC) // probar velocidades multiplicando en vez de sumando (k+1) => (k*2)
+        }                                  //Considerar volver funcion fuera de la funcion para reutilizar arriba
+      }
+      def filtrar(SC: Seq[Seq[Char]], k: Int): Seq[Seq[Char]] = {
+        SC.flatMap(seq1 => SC.map(seq2 => seq1 ++ seq2)).filter {
+          s => (0 to s.length - k).forall(i => SC.contains(s.slice(i, i + k)))
+        }
+      }
+
       val conjuntoInicial: Seq[Seq[Char]] = alfabeto.map(Seq(_))
       generarCadenaTurbo(1, conjuntoInicial)
     }
