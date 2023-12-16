@@ -1,5 +1,5 @@
 package taller4
-
+import common._
 import scala.annotation.tailrec
 
 /**
@@ -59,6 +59,39 @@ class DNA {
     s
   }
 
+  def reconstruirCadenaIngenuoPar(umbral:Int)(n: Int, o: Oraculo): Seq[Char] = {
+    def test(n: Int): List[Seq[Char]] = {
+      if (n <= 0) {
+        List(Seq[Char]())
+      } else {
+        val (alfabeto1, alfabeto2) = alfabeto.splitAt(alfabeto.length / 2)
+        val combinaciones1 = task {
+          alfabeto1.flatMap { letra =>
+            test(n - 1).map { combinacion =>
+              letra +: combinacion
+            }
+          }
+        }
+        val combinaciones2 = task {
+          alfabeto2.flatMap { letra =>
+            test(n - 1).map { combinacion =>
+              letra +: combinacion
+            }
+          }
+        }
+        val combinaciones = parallel(combinaciones1, combinaciones2)
+        (combinaciones._1.join() ++ combinaciones._2.join()).toList
+      }
+    }
+    val s = test(n).to(LazyList).filter(o).head
+    s
+  }
+
+
+
+
+
+
   /**
    * Generates all possible combinations of the DNA alphabet of a given length and
    * returns the first one that satisfies a given condition. This method is optimized
@@ -108,7 +141,6 @@ class DNA {
           generarCadenaTurbo(k + 1, newSC)
         }
       }
-
       val conjuntoInicial: Seq[Seq[Char]] = alfabeto.map(Seq(_))
       generarCadenaTurbo(1, conjuntoInicial)
     }
