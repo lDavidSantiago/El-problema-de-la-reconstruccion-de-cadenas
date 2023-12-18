@@ -60,7 +60,7 @@ class DNA {
     s
   }
 
-  def reconstruirCadenaIngenuoPar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
+  def reconstruirCadenaIngenuoPar(n: Int, o: Oraculo): Seq[Char] = {
     def test(n: Int): List[Seq[Char]] = {
       if (n <= 0) {
         List(Seq[Char]())
@@ -192,7 +192,7 @@ class DNA {
         val newSC = SC.flatMap(seq => alfabeto.flatMap(c => Some(seq :+ c).filter(o)))
         val resultado = newSC.find(w => w.length == n)
 
-        if ((resultado.nonEmpty)) {
+        if (resultado.nonEmpty) {
           resultado.head
         } else {
           generarCadenaTurbo(k * 2, newSC)
