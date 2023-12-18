@@ -129,7 +129,7 @@ class DNA {
         val newSC = SC.flatMap(seq => alfabeto.map(c => seq :+ c)).filter(o)
         newSC.find(_.length == n) match {
           case Some(resultado) => resultado
-          case None => GenerarCadenaMejorada(k * 2, newSC)
+          case None => GenerarCadenaMejorada(k + 1, newSC)
         }
       }
     }

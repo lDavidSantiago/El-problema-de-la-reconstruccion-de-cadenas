@@ -19,7 +19,7 @@ object Taller4 {
 
   def main(args: Array[String]): Unit = {
     val dna = new DNA()
-    val cadena = dna.randomDna(25)
+    val cadena = dna.randomDna(250)
     val or = Oraculo.crearOraculo(cadena)
     val umbralcant = 501
     val sizes = List(4, 8, 16, 32, 64, 128, 256, 512)
@@ -48,20 +48,20 @@ object Taller4 {
     //println("Resultado de reconstruirCadenaIngenuo:")
     //println(dna.reconstruirCadenaIngenuo(cadena.length,or))
 
-    //println("Resultado de ReconstruirCadenaMejorada: ")
-    //println(dna.reconstruirCadenaMejorado(cadena.length, or))
+    println("Resultado de ReconstruirCadenaMejorada: ")
+    println(dna.reconstruirCadenaMejorado(cadena.length, or))
 
-    //println("Resultado de paralelizacion de Cadena Mejorada: ")
+    println("Resultado de paralelizacion de Cadena Mejorada: ")
     println(dna.reconstruirCadenaMejoradoPar(cadena.length, or))
 
 
-    //println("Resultado de reconstruirCadenaTurbo:")
+    println("Resultado de reconstruirCadenaTurbo:")
     println(dna.reconstruirCadenaTurbo(cadena.length, or))
 
-    //println("Resultado de pralelizacon de Turbo: ")
-    //println(dna.reconstruirCadenaTurbopar(4)(cadena.length,or))
+    println("Resultado de pralelizacon de Turbo: ")
+    println(dna.reconstruirCadenaTurbopar(cadena.length,or))
 
-    //println("Resultado de reconstruirCadenaTurboMejorada:")
+    println("Resultado de reconstruirCadenaTurboMejorada:")
     println(dna.reconstruirCadenaTurboMejorada(cadena.length, or))
   }
 }
