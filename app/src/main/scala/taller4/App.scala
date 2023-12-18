@@ -13,7 +13,7 @@ import org.scalameter._
 
 
 
-object Taller4 {
+object App {
   type Oraculo = Seq[Char] => Boolean
 
 
