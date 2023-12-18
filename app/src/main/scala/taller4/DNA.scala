@@ -3,21 +3,21 @@ import common._
 import scala.annotation.tailrec
 
 /**
- * DNA class represents a DNA sequence generator.
- * It contains methods to generate random DNA sequences.
+ * La clase DNA representa un generador de secuencias de ADN.
+ * Contiene métodos para generar secuencias de ADN aleatorias.
  */
 class DNA {
-  //The DNA alphabet consisting of the four nucleotides
+  // El alfabeto de ADN que consiste en los cuatro nucleótidos
   val alfabeto = Seq('A', 'C', 'G', 'T')
 
-  //Type alias for a function that takes a sequence of characters and returns a boolean
+  // Alias de tipo para una función que toma una secuencia de caracteres y devuelve un booleano
   type Oraculo = Seq[Char] => Boolean
 
   /**
-   * Generates a random DNA sequence of a given length.
+   * Genera una secuencia de ADN aleatoria de una longitud dada.
    *
-   * @param tam The length of the DNA sequence to generate.
-   * @return A sequence of characters representing a random DNA sequence.
+   * @param tam La longitud de la secuencia de ADN a generar.
+   * @return Una secuencia de caracteres que representa una secuencia de ADN aleatoria.
    */
   def randomDna(tam: Int): Seq[Char] = {
     val r = scala.util.Random
@@ -25,11 +25,11 @@ class DNA {
   }
 
   /**
-   * Verifies if a subsequence is present in a given sequence.
+   * Verifica si una subsecuencia está presente en una secuencia dada.
    *
-   * @param subCadena The subsequence to look for.
-   * @param cadena    The sequence in which to look for the subsequence.
-   * @return A boolean indicating whether the subsequence is present in the sequence.
+   * @param subCadena La subsecuencia a buscar.
+   * @param cadena    La secuencia en la que buscar la subsecuencia.
+   * @return Un booleano que indica si la subsecuencia está presente en la secuencia.
    */
   def verificarSecuencia(subCadena: Seq[Char], cadena: Seq[Char]): Boolean = {
     val oraculo: Oraculo = (s: Seq[Char]) => s.containsSlice(subCadena)
@@ -37,12 +37,12 @@ class DNA {
   }
 
   /**
-   * Generates all possible combinations of the DNA alphabet of a given length and
-   * returns the first one that satisfies a given condition.
+   * Genera todas las posibles combinaciones del alfabeto de ADN de una longitud dada y
+   * devuelve la primera que satisface una condición dada.
    *
-   * @param n The length of the combinations to generate.
-   * @param o The condition that the combinations must satisfy.
-   * @return A sequence of characters representing a combination that satisfies the condition.
+   * @param n La longitud de las combinaciones a generar.
+   * @param o La condición que deben satisfacer las combinaciones.
+   * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
    */
   def reconstruirCadenaIngenuo(n: Int, o: Oraculo): Seq[Char] = {
     def generarCombinaciones(n: Int): List[Seq[Char]] = {
@@ -65,38 +65,61 @@ class DNA {
       if (n <= 0) {
         List(Seq[Char]())
       } else {
-        val (alfabeto1, alfabeto2) = alfabeto.splitAt(alfabeto.length / 2)
+        val alfabeto1 = List(alfabeto.head)
+        val alfabeto2 = List(alfabeto(1))
+        val alfabeto3 = List(alfabeto(2))
+        val alfabeto4 = List(alfabeto(3))
+
         val combinaciones1 = task {
           alfabeto1.flatMap { letra =>
-            test(n - 1).map { combinacion =>
-              letra +: combinacion
+            test(n - 1).map { combinaciones =>
+              letra +: combinaciones
             }
           }
         }
+
         val combinaciones2 = task {
           alfabeto2.flatMap { letra =>
-            test(n - 1).map { combinacion =>
-              letra +: combinacion
+            test(n - 1).map { combinaciones =>
+              letra +: combinaciones
             }
           }
         }
-        val combinaciones = parallel(combinaciones1, combinaciones2)
-        (combinaciones._1.join() ++ combinaciones._2.join()).toList
+
+        val combinaciones3 = task {
+          alfabeto3.flatMap { letra =>
+            test(n - 1).map { combinaciones =>
+              letra +: combinaciones
+            }
+          }
+        }
+
+        val combinaciones4 = task {
+          alfabeto4.flatMap { letra =>
+            test(n - 1).map { combinaciones =>
+              letra +: combinaciones
+            }
+          }
+        }
+
+        val combinaciones = parallel(combinaciones1, combinaciones2, combinaciones3, combinaciones4)
+        combinaciones._1.join() ++ combinaciones._2.join() ++ combinaciones._3.join() ++ combinaciones._4.join()
       }
     }
+
     val s = test(n).to(LazyList).filter(o).head
     s
   }
 
 
   /**
-   * Generates all possible combinations of the DNA alphabet of a given length and
-   * returns the first one that satisfies a given condition. This method is optimized
-   * to generate combinations in a more efficient way.
+   * Genera todas las posibles combinaciones del alfabeto de ADN de una longitud dada y
+   * devuelve la primera que satisface una condición dada. Este método está optimizado
+   * para generar combinaciones de una manera más eficiente.
    *
-   * @param n The length of the combinations to generate.
-   * @param o The condition that the combinations must satisfy.
-   * @return A sequence of characters representing a combination that satisfies the condition.
+   * @param n La longitud de las combinaciones a generar.
+   * @param o La condición que deben satisfacer las combinaciones.
+   * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
    */
   def reconstruirCadenaMejorado(n: Int, o: Oraculo): Seq[Char] = {
     @tailrec
@@ -113,6 +136,16 @@ class DNA {
     GenerarCadenaMejorada(1, Seq(Seq.empty[Char]))
   }
 
+  /**
+   * Genera todas las posibles combinaciones del alfabeto de ADN de una longitud dada y
+   * devuelve la primera que satisface una condición dada. Este método está optimizado
+   * para generar combinaciones de una manera más eficiente y paralelizada.
+   *
+   * @param umbral El umbral para la paralelización.
+   * @param n La longitud de las combinaciones a generar.
+   * @param o La condición que deben satisfacer las combinaciones.
+   * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
+   */
 
   def reconstruirCadenaMejoradoPar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
     @tailrec
@@ -148,14 +181,16 @@ class DNA {
     GenerarCadenaMejoradapar(1, Seq(Seq.empty[Char]))
   }
 
+
+
   /**
-   * Generates all possible combinations of the DNA alphabet of a given length and
-   * returns the first one that satisfies a given condition. This method is further optimized
-   * to generate combinations in the most efficient way.
+   * Genera todas las posibles combinaciones del alfabeto de ADN de una longitud dada y
+   * devuelve la primera que satisface una condición dada. Este método está optimizado
+   * para generar combinaciones de la manera más eficiente posible.
    *
-   * @param n The length of the combinations to generate.
-   * @param o The condition that the combinations must satisfy.
-   * @return A sequence of characters representing a combination that satisfies the condition.
+   * @param n La longitud de las combinaciones a generar.
+   * @param o La condición que deben satisfacer las combinaciones.
+   * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
    */
   def reconstruirCadenaTurbo(n: Int, o: Oraculo): Seq[Char] = {
     if (n == 1) {
@@ -178,6 +213,15 @@ class DNA {
     }
   }
 
+  /**
+   * Genera todas las posibles combinaciones del alfabeto de ADN de una longitud dada y
+   * devuelve la primera que satisface una condición dada. Este método está optimizado
+   * para generar combinaciones de la manera más eficiente posible.
+   *
+   * @param n La longitud de las combinaciones a generar.
+   * @param o La condición que deben satisfacer las combinaciones.
+   * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
+   */
   def reconstruirCadenaTurbopar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
     if (n == 1) {
       alfabeto.map(Seq(_)).find(o).getOrElse(Seq.empty)
@@ -206,7 +250,15 @@ class DNA {
   }
 
 
-
+  /**
+   * Genera todas las posibles combinaciones del alfabeto de ADN de una longitud dada y
+   * devuelve la primera que satisface una condición dada. Este método está optimizado
+   * para generar combinaciones de la manera más eficiente posible y mejorada.
+   *
+   * @param n La longitud de las combinaciones a generar.
+   * @param o La condición que deben satisfacer las combinaciones.
+   * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
+   */
 
   def reconstruirCadenaTurboMejorada(n: Int, o: Oraculo): Seq[Char] = {
     if (n == 1) {
