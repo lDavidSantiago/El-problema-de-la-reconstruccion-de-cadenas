@@ -62,11 +62,14 @@ object Taller4 {
       dna.reconstruirCadenaTurboMejorada(cadena.length, or)
     }
     println(s"Time taken by turbo mejorada: ${timeTurbo.value * 1000} ms")
+    println(dna.reconstruirCadenaTurboMejorada(cadena.length, or))
 
-    /*val timeTurbopar = withWarmer(new Warmer.Default) measure {
+    val timeTurbopar = withWarmer(new Warmer.Default) measure {
       dna.reconstruirCadenaTurboMejoradaPar(umbralcant)(cadena.length,or)
     }
     println(s"Time taken by turbo mejorada paralelizada: ${timeTurbopar.value * 1000} ms")
+    println(dna.reconstruirCadenaTurboMejoradaPar(umbralcant)(cadena.length,or))
+    /*
     val timeTurbopar2 = withWarmer(new Warmer.Default) measure {
       dna.reconstruirCadenaTurboMejoradaPar(20)(cadena.length, or)
     }
