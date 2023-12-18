@@ -263,21 +263,21 @@ class DNA {
   def reconstruirCadenaTurboMejorada(n: Int, o: Oraculo): Seq[Char] = {
     if (n == 1) {
       alfabeto.map(Seq(_)).find(o).getOrElse(Seq.empty)
-    }
-    else {
+    } else {
       @tailrec
       def generarCadenaTurbo(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
-        val newSC = SC.flatMap(seq => alfabeto.flatMap(c => Some(seq :+ c).filter(o)))
+        val newSC = filtrar(SC, k).filter(o)
         val resultado = newSC.find(w => w.length == n)
-        if (resultado.nonEmpty) {
-          resultado.head
+        if (resultado.isDefined) {
+          resultado.get
         } else {
-          generarCadenaTurbo(k + 1, newSC) // probar velocidades multiplicando en vez de sumando (k+1) => (k*2)
-        }                                  //Considerar volver funcion fuera de la funcion para reutilizar arriba
+          generarCadenaTurbo(k + 1, newSC)
+        }
       }
+
       def filtrar(SC: Seq[Seq[Char]], k: Int): Seq[Seq[Char]] = {
-        SC.flatMap(seq1 => SC.map(seq2 => seq1 ++ seq2)).filter {
-          s => (0 to s.length - k).forall(i => SC.contains(s.slice(i, i + k)))
+        SC.flatMap(seq1 => alfabeto.map(seq2 => seq1 :+ seq2)).filter { s =>
+          (0 to s.length - k).forall(i => SC.contains(s.slice(i, i + k)))
         }
       }
 
