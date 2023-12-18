@@ -164,11 +164,7 @@ class DNA {
           case Some(resultado) => resultado
           case None => newSecuenceCaracter._2.join().find(_.length == n) match {
             case Some(resultado) => resultado
-            case None => newSecuenceCaracter._2.join().find(_.length == n) match {
-              case Some(resultado) => resultado
-              case None => GenerarCadenaMejoradapar(k * 2, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
-            }
-            case None => GenerarCadenaMejoradapar(k * 2, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
+            case None => GenerarCadenaMejoradapar(k + 1, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
           }
         }
       }
@@ -261,7 +257,7 @@ class DNA {
         if (resultado.isDefined) {
           resultado.get
         } else {
-          generarCadenaTurbo(k * 2, newSC)
+          generarCadenaTurbo(k + 1, newSC)
         }
       }
 
@@ -288,7 +284,7 @@ class DNA {
         if (resultado.isDefined) {
           resultado.get
         } else {
-          generarCadenaTurbo(k * 2, newSC)
+          generarCadenaTurbo(k + 1, newSC)
         }
       }
 

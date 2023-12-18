@@ -19,14 +19,11 @@ object Taller4 {
 
   def main(args: Array[String]): Unit = {
     val dna = new DNA()
-<<<<<<< HEAD
     val cadena = dna.randomDna(25)
     val or = Oraculo.crearOraculo(cadena)
     val umbralcant = 501
-=======
     val sizes = List(4, 8, 16, 32, 64, 128, 256, 512)
->>>>>>> 5395bf112e5c26007f27530cab17196f61057f3b
-
+/*
     sizes.foreach { size =>
       val cadena = dna.randomDna(size)
       val or = Oraculo.crearOraculo(cadena)
@@ -47,7 +44,7 @@ object Taller4 {
       val aceleracion = timeMejo.value / timeMejopar.value
       println(s"Aceleracion:  $aceleracion")
     }
-
+*/
     //println("Resultado de reconstruirCadenaIngenuo:")
     //println(dna.reconstruirCadenaIngenuo(cadena.length,or))
 
@@ -55,7 +52,7 @@ object Taller4 {
     //println(dna.reconstruirCadenaMejorado(cadena.length, or))
 
     //println("Resultado de paralelizacion de Cadena Mejorada: ")
-    //println(dna.reconstruirCadenaMejoradoPar(4)(cadena.length, or))
+    println(dna.reconstruirCadenaMejoradoPar(cadena.length, or))
 
 
     //println("Resultado de reconstruirCadenaTurbo:")
@@ -66,7 +63,5 @@ object Taller4 {
 
     //println("Resultado de reconstruirCadenaTurboMejorada:")
     println(dna.reconstruirCadenaTurboMejorada(cadena.length, or))
-
   }
-
 }
