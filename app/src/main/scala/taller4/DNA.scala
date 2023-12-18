@@ -141,39 +141,34 @@ class DNA {
    * devuelve la primera que satisface una condición dada. Este método está optimizado
    * para generar combinaciones de una manera más eficiente y paralelizada.
    *
-   * @param umbral El umbral para la paralelización.
    * @param n La longitud de las combinaciones a generar.
    * @param o La condición que deben satisfacer las combinaciones.
    * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
    */
 
-  def reconstruirCadenaMejoradoPar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
+  def reconstruirCadenaMejoradoPar(n: Int, o: Oraculo): Seq[Char] = {
     @tailrec
     def GenerarCadenaMejoradapar(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
       if (k > n) Seq.empty[Char]
       else {
-        if (k <= umbral) {
-          val newSC = SC.flatMap(seq => alfabeto.map(c => seq :+ c)).filter(o)
-          newSC.find(_.length == n) match {
-            case Some(resultado) => resultado
-            case None => GenerarCadenaMejoradapar(k + 1, newSC)
-          }
-        } else {
-          val (alfabeto1, alfabeto2) = alfabeto.splitAt(alfabeto.length / 2)
-          val newSecuenceCaracter1 = task {
-            SC.flatMap(seq => alfabeto1.map(c => seq :+ c)).filter(o)
-          }
-          val newSecuenceCaracter2 = task {
-            SC.flatMap(seq => alfabeto2.map(c => seq :+ c)).filter(o)
-          }
-          val newSecuenceCaracter = parallel(newSecuenceCaracter1, newSecuenceCaracter2)
+        val (alfabeto1, alfabeto2) = alfabeto.splitAt(alfabeto.length / 2)
+        val newSecuenceCaracter1 = task {
+          SC.flatMap(seq => alfabeto1.map(c => seq :+ c)).filter(o)
+        }
+        val newSecuenceCaracter2 = task {
+          SC.flatMap(seq => alfabeto2.map(c => seq :+ c)).filter(o)
+        }
+        val newSecuenceCaracter = parallel(newSecuenceCaracter1, newSecuenceCaracter2)
 
-          newSecuenceCaracter._1.join().find(_.length == n) match {
+        newSecuenceCaracter._1.join().find(_.length == n) match {
+          case Some(resultado) => resultado
+          case None => newSecuenceCaracter._2.join().find(_.length == n) match {
             case Some(resultado) => resultado
             case None => newSecuenceCaracter._2.join().find(_.length == n) match {
               case Some(resultado) => resultado
               case None => GenerarCadenaMejoradapar(k * 2, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
             }
+            case None => GenerarCadenaMejoradapar(k * 2, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
           }
         }
       }
@@ -222,27 +217,22 @@ class DNA {
    * @param o La condición que deben satisfacer las combinaciones.
    * @return Una secuencia de caracteres que representa una combinación que satisface la condición.
    */
-  def reconstruirCadenaTurbopar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
+  def reconstruirCadenaTurbopar(n: Int, o: Oraculo): Seq[Char] = {
     if (n == 1) {
       alfabeto.map(Seq(_)).find(o).getOrElse(Seq.empty)
     } else {
       def generarCadenaTurboPar(k: Int, SC: Seq[Seq[Char]]): Seq[Char] = {
-        if (k <= umbral) {
-          val newSC = SC.flatMap(seq => alfabeto.map(c => seq :+ c)).filter(o)
-          newSC.find(_.length == n).getOrElse(generarCadenaTurboPar(k + 1, newSC))
-        } else {
-          val (alfabeto1, alfabeto2) = alfabeto.splitAt(alfabeto.length / 2)
-          val nuevaSecuencia1 = task {
-            SC.flatMap(seq => alfabeto1.map(c => seq :+ c)).filter(o)
-          }
-          val nuevaSecuencia2 = task {
-            SC.flatMap(seq => alfabeto2.map(c => seq :+ c)).filter(o)
-          }
-          val NuevaSecuenciaCombi = parallel(nuevaSecuencia1, nuevaSecuencia2)
-          val resultado = NuevaSecuenciaCombi._1.join().find(_.length == n).orElse(NuevaSecuenciaCombi._2.join().find(_.length == n))
-
-          resultado.getOrElse(generarCadenaTurboPar(k * 2, NuevaSecuenciaCombi._1.join() ++ NuevaSecuenciaCombi._2.join()))
+        val (alfabeto1, alfabeto2) = alfabeto.splitAt(alfabeto.length / 2)
+        val nuevaSecuencia1 = task {
+          SC.flatMap(seq => alfabeto1.map(c => seq :+ c)).filter(o)
         }
+        val nuevaSecuencia2 = task {
+          SC.flatMap(seq => alfabeto2.map(c => seq :+ c)).filter(o)
+        }
+        val NuevaSecuenciaCombi = parallel(nuevaSecuencia1, nuevaSecuencia2)
+        val resultado = NuevaSecuenciaCombi._1.join().find(_.length == n).orElse(NuevaSecuenciaCombi._2.join().find(_.length == n))
+
+        resultado.getOrElse(generarCadenaTurboPar(k * 2, NuevaSecuenciaCombi._1.join() ++ NuevaSecuenciaCombi._2.join()))
       }
 
       generarCadenaTurboPar(1, Seq(Seq.empty[Char]))
@@ -288,7 +278,7 @@ class DNA {
 
 
 
-  def reconstruirCadenaTurboMejoradaPar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
+  def reconstruirCadenaTurboMejoradaPar(n: Int, o: Oraculo): Seq[Char] = {
     if (n == 1) {
       alfabeto.map(Seq(_)).find(o).getOrElse(Seq.empty)
     } else {
