@@ -129,7 +129,7 @@ class DNA {
         val newSC = SC.flatMap(seq => alfabeto.map(c => seq :+ c)).filter(o)
         newSC.find(_.length == n) match {
           case Some(resultado) => resultado
-          case None => GenerarCadenaMejorada(k + 1, newSC)
+          case None => GenerarCadenaMejorada(k * 2, newSC)
         }
       }
     }
@@ -172,7 +172,7 @@ class DNA {
             case Some(resultado) => resultado
             case None => newSecuenceCaracter._2.join().find(_.length == n) match {
               case Some(resultado) => resultado
-              case None => GenerarCadenaMejoradapar(k + 1, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
+              case None => GenerarCadenaMejoradapar(k * 2, newSecuenceCaracter._1.join() ++ newSecuenceCaracter._2.join())
             }
           }
         }
@@ -204,7 +204,7 @@ class DNA {
         if ((resultado.nonEmpty)) {
           resultado.head
         } else {
-          generarCadenaTurbo(k + 1, newSC)
+          generarCadenaTurbo(k * 2, newSC)
         }
       }
 
@@ -241,7 +241,7 @@ class DNA {
           val NuevaSecuenciaCombi = parallel(nuevaSecuencia1, nuevaSecuencia2)
           val resultado = NuevaSecuenciaCombi._1.join().find(_.length == n).orElse(NuevaSecuenciaCombi._2.join().find(_.length == n))
 
-          resultado.getOrElse(generarCadenaTurboPar(k + 1, NuevaSecuenciaCombi._1.join() ++ NuevaSecuenciaCombi._2.join()))
+          resultado.getOrElse(generarCadenaTurboPar(k * 2, NuevaSecuenciaCombi._1.join() ++ NuevaSecuenciaCombi._2.join()))
         }
       }
 
@@ -271,7 +271,7 @@ class DNA {
         if (resultado.isDefined) {
           resultado.get
         } else {
-          generarCadenaTurbo(k + 1, newSC)
+          generarCadenaTurbo(k * 2, newSC)
         }
       }
 
@@ -298,7 +298,7 @@ class DNA {
         if (resultado.isDefined) {
           resultado.get
         } else {
-          generarCadenaTurbo(k + 1, newSC)
+          generarCadenaTurbo(k * 2, newSC)
         }
       }
 
