@@ -19,7 +19,7 @@ object Taller4 {
 
   def main(args: Array[String]): Unit = {
     val dna = new DNA()
-    val cadena = dna.randomDna(4)
+    val cadena = dna.randomDna(250)
     val or = Oraculo.crearOraculo(cadena)
     val umbralcant = 4
 
@@ -48,7 +48,7 @@ object Taller4 {
     //println(dna.reconstruirCadenaTurboMejorada(cadena.length, or))
 
 
-    val timeMejo = withWarmer(new Warmer.Default) measure {
+    /*val timeMejo = withWarmer(new Warmer.Default) measure {
       dna.reconstruirCadenaMejorado(cadena.length, or)
     }
     println(s"Time taken by mejorada: ${timeMejo.value * 1000} ms")
@@ -57,14 +57,14 @@ object Taller4 {
       dna.reconstruirCadenaMejoradoPar(umbralcant)(cadena.length, or)
     }
     println(s"Time taken by mejorada paralelizada: ${timeMejopar.value * 1000} ms")
-
+*/
     val timeTurbo = withWarmer(new Warmer.Default) measure {
-      dna.reconstruirCadenaTurbo(cadena.length, or)
+      dna.reconstruirCadenaTurboMejorada(cadena.length, or)
     }
     println(s"Time taken by turbo mejorada: ${timeTurbo.value * 1000} ms")
 
     val timeTurbopar = withWarmer(new Warmer.Default) measure {
-      dna.reconstruirCadenaTurbopar(umbralcant)(cadena.length,or)
+      dna.reconstruirCadenaTurboMejoradaPar(umbralcant)(cadena.length,or)
     }
     println(s"Time taken by turbo mejorada paralelizada: ${timeTurbopar.value * 1000} ms")
 
