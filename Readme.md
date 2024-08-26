@@ -1,3 +1,2 @@
-# Taller 4  - Fundamentos de programación funcional y concurrente
+# Proyecto Final 
 
-Implementción de multiplicación concurrente de matrices
